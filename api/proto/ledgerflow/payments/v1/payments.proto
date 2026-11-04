@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package ledgerflow.payments.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ledgerflow/common/v1/money.proto";
+
+service PaymentService {
+  // Idempotent: retrying with the same idempotency_key returns the original result.
+  rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse);
+  rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse);
+}
+
+message CreatePaymentRequest {
+  string idempotency_key = 1;  // client-generated once per logical payment
+  string source_account_id = 2;
+  string destination_account_id = 3;
+  ledgerflow.common.v1.Money amount = 4;
+  string reference = 5;
+}
+message CreatePaymentResponse { Payment payment = 1; }
+
+message GetPaymentRequest { string payment_id = 1; }
+message GetPaymentResponse { Payment payment = 1; }
+
+message Payment {
+  string payment_id = 1;
+  string idempotency_key = 2;
+  string source_account_id = 3;
+  string destination_account_id = 4;
+  ledgerflow.common.v1.Money amount = 5;
+  string reference = 6;
+  PaymentStatus status = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+enum PaymentStatus {
+  PAYMENT_STATUS_UNSPECIFIED = 0; // proto3 zero value means "not set", never a real state
+  PAYMENT_STATUS_PENDING = 1;
+  PAYMENT_STATUS_SETTLED = 2;
+  PAYMENT_STATUS_DECLINED = 3;
+}

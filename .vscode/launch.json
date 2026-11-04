@@ -1,0 +1,2 @@
+{ "version": "0.2.0", "configurations": [
+  { "name": "payment-svc", "type": "go", "request": "launch", "mode": "auto", "program": "${workspaceFolder}/cmd/payment-svc" } ] }

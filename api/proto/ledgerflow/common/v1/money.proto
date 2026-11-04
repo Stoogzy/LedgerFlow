@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package ledgerflow.common.v1;
+
+// Money is an amount in the currency's minor unit (e.g. pence for GBP).
+message Money {
+  int64 minor_units = 1;  // signed: debits and reversals
+  string currency = 2;    // ISO 4217, e.g. "GBP"
+}
